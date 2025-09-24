@@ -11,6 +11,7 @@ class Resource extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'sku',
         'name',
         'category',
@@ -32,6 +33,16 @@ class Resource extends Model
         'min_stock_level' => 'decimal:3',
         'max_stock_level' => 'decimal:3',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('tenant', function ($query) {
+            $query->where('tenant_id', tenant()->id ?? null);
+        });
+    }
 
     /**
      * Get the movements for the resource.

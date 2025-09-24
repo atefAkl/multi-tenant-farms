@@ -12,6 +12,7 @@ class Worker extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'national_id',
         'phone',
@@ -28,6 +29,16 @@ class Worker extends Model
         'salary' => 'decimal:2',
         'hire_date' => 'date',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('tenant', function ($query) {
+            $query->where('tenant_id', tenant()->id ?? null);
+        });
+    }
 
     /**
      * Get the farm that the worker belongs to.

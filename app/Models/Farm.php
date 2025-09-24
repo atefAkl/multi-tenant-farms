@@ -11,6 +11,7 @@ class Farm extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'name',
         'location',
         'owner',
@@ -23,6 +24,16 @@ class Farm extends Model
     protected $casts = [
         'is_active' => 'boolean',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('tenant', function ($query) {
+            $query->where('tenant_id', tenant()->id ?? null);
+        });
+    }
 
     /**
      * Get the blocks for the farm.

@@ -23,6 +23,16 @@ class Tenant extends BaseTenant implements TenantWithDatabase
         'data'
     ];
 
+    public static function generateNewId()
+    {
+        return self::max('id') ?? 0 + 1;
+    }
+
+    public function domains()
+    {
+        return 'demo.localhost:8000';
+    }
+
     protected $casts = [
         'trial_ends_at' => 'datetime',
         'data' => 'array',

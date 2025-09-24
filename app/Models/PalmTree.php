@@ -12,6 +12,7 @@ class PalmTree extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'block_id',
         'tree_code',
         'row_no',
@@ -25,6 +26,16 @@ class PalmTree extends Model
     protected $casts = [
         'planting_date' => 'date',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('tenant', function ($query) {
+            $query->where('tenant_id', tenant()->id ?? null);
+        });
+    }
 
     /**
      * Get the block that owns the palm tree.

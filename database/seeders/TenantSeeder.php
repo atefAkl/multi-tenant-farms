@@ -16,7 +16,7 @@ class TenantSeeder extends Seeder
     {
         // Create a demo tenant
         $tenant = Tenant::create([
-            'id' => 'demo-farm',
+            'id' => Tenant::generateNewId(),
             'name' => 'مزرعة النخيل التجريبية',
             'email' => 'demo@palms.com',
             'phone' => '+966501234567',
@@ -36,14 +36,14 @@ class TenantSeeder extends Seeder
         ]);
 
         // Create admin user for the tenant
-        $tenant->run(function () {
+        $tenant->run(function ($tenant) {
             User::create([
                 'name' => 'مدير المزرعة',
                 'email' => 'admin@demo-farm.com',
                 'password' => Hash::make('password'),
                 'phone' => '+966501234567',
                 'role' => 'admin',
-                'tenant_id' => 'demo-farm',
+                'tenant_id' => $tenant->id,
             ]);
 
             User::create([
@@ -52,7 +52,7 @@ class TenantSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => '+966501234568',
                 'role' => 'engineer',
-                'tenant_id' => 'demo-farm',
+                'tenant_id' => $tenant->id,
             ]);
 
             User::create([
@@ -61,7 +61,7 @@ class TenantSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => '+966501234569',
                 'role' => 'worker',
-                'tenant_id' => 'demo-farm',
+                'tenant_id' => $tenant->id,
             ]);
         });
     }

@@ -12,6 +12,7 @@ class Harvest extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'palm_tree_id',
         'harvest_date',
         'season',
@@ -25,6 +26,16 @@ class Harvest extends Model
         'total_quantity' => 'decimal:2',
         'total_revenue' => 'decimal:2',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('tenant', function ($query) {
+            $query->where('tenant_id', tenant()->id ?? null);
+        });
+    }
 
     /**
      * Get the palm tree that was harvested.

@@ -10,6 +10,7 @@ class Expense extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'category',
         'amount',
         'paid_to',
@@ -27,6 +28,16 @@ class Expense extends Model
         'amount' => 'decimal:2',
         'is_recurring' => 'boolean',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('tenant', function ($query) {
+            $query->where('tenant_id', tenant()->id ?? null);
+        });
+    }
 
     /**
      * Get the formatted amount with currency.

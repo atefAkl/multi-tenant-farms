@@ -11,6 +11,7 @@ class Invoice extends Model
     use HasFactory;
 
     protected $fillable = [
+        'tenant_id',
         'invoice_number',
         'customer_name',
         'customer_email',
@@ -35,6 +36,16 @@ class Invoice extends Model
         'discount_amount' => 'decimal:2',
         'total_amount' => 'decimal:2',
     ];
+
+    /**
+     * The "booted" method of the model.
+     */
+    protected static function booted(): void
+    {
+        static::addGlobalScope('tenant', function ($query) {
+            $query->where('tenant_id', tenant()->id ?? null);
+        });
+    }
 
     /**
      * Get the items for the invoice.
